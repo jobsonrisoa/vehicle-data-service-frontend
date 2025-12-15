@@ -8,6 +8,9 @@ export const GET_CARS = gql`
       model
       year
       color
+      mobile
+      tablet
+      desktop
     }
   }
 `;

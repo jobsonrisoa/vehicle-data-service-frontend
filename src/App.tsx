@@ -1,10 +1,7 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  // useQuery,
-} from "@apollo/client";
-import { TaskList } from "./components/TaskList";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { CarsProvider } from "./hooks/useCars";
+import { CarForm } from "./components/CarForm";
+import { CarList } from "./components/CarList";
 
 const client = new ApolloClient({
   uri: "/graphql", // MSW intercepts this
@@ -14,7 +11,10 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <TaskList />
+      <CarsProvider>
+        <CarForm />
+        <CarList />
+      </CarsProvider>
     </ApolloProvider>
   );
 }
