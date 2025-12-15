@@ -46,4 +46,34 @@ export const handlers = [
   graphql.query("GetCars", () => {
     return HttpResponse.json({ data: { cars: carList } });
   }),
+  graphql.query("GetCarByFilter", ({ variables }) => {
+    const { make, model, year, color } = variables as {
+      make?: string;
+      model?: string;
+      year?: number;
+      color?: string;
+    };
+
+    const match = carList.find((car) => {
+      if (make && car.make !== make) {
+        return false;
+      }
+
+      if (model && car.model !== model) {
+        return false;
+      }
+
+      if (typeof year === "number" && car.year !== year) {
+        return false;
+      }
+
+      if (color && car.color !== color) {
+        return false;
+      }
+
+      return true;
+    });
+
+    return HttpResponse.json({ data: { car: match ?? null } });
+  }),
 ];

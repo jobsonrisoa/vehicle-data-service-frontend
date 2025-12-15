@@ -52,5 +52,22 @@ describe("CarList", () => {
     expect(screen.getByText(/Audi A3/i)).toBeInTheDocument();
     expect(screen.queryByText(/Audi Q5/i)).toBeNull();
   });
+
+  it("filters by year using the year select", async () => {
+    renderWithApollo();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Audi Q5/i)).toBeInTheDocument();
+    });
+
+    const select = screen.getByLabelText(/year/i);
+
+    await userEvent.click(select);
+    await userEvent.click(screen.getByRole("option", { name: /2024/i }));
+
+    expect(screen.getByText(/Audi R8/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Audi Q5/i)).toBeNull();
+    expect(screen.queryByText(/Audi A3/i)).toBeNull();
+  });
 });
 

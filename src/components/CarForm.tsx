@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { useCars } from "../hooks/useCars";
 
@@ -42,45 +42,45 @@ export function CarForm() {
 
   return (
     <Box padding={4} component="form" onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={3}>
+      <Box display="flex" flexWrap="wrap" gap={2}>
+        <Box flex="1 1 200px">
           <TextField
             fullWidth
             label="Make"
             value={make}
             onChange={(event) => setMake(event.target.value)}
           />
-        </Grid>
-        <Grid item xs={12} sm={3}>
+        </Box>
+        <Box flex="1 1 200px">
           <TextField
             fullWidth
             label="Model"
             value={model}
             onChange={(event) => setModel(event.target.value)}
           />
-        </Grid>
-        <Grid item xs={12} sm={3}>
+        </Box>
+        <Box flex="1 1 200px">
           <TextField
             fullWidth
             label="Year"
             value={year}
             onChange={(event) => setYear(event.target.value)}
           />
-        </Grid>
-        <Grid item xs={12} sm={3}>
+        </Box>
+        <Box flex="1 1 200px">
           <TextField
             fullWidth
             label="Color"
             value={color}
             onChange={(event) => setColor(event.target.value)}
           />
-        </Grid>
-        <Grid item xs={12}>
+        </Box>
+        <Box flexBasis="100%">
           <Button type="submit" variant="contained">
             Add Car
           </Button>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
 }

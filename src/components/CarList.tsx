@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useMediaQuery, useTheme, Box, Grid, Card, CardMedia, CardContent, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useMediaQuery, useTheme, Box, Card, CardMedia, CardContent, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useCars } from "../hooks/useCars";
 
 export function CarList() {
   const { cars, loading, error } = useCars();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"model-asc" | "model-desc">("model-asc");
+  const [yearFilter, setYearFilter] = useState<string>("all");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -26,10 +27,20 @@ export function CarList() {
     );
   }
 
+  const years = Array.from(new Set(cars.map((car) => car.year))).sort(
+    (a, b) => a - b
+  );
+
   const filtered = cars
     .filter((car) =>
       car.model.toLowerCase().includes(search.toLowerCase())
     )
+    .filter((car) => {
+      if (yearFilter === "all") {
+        return true;
+      }
+      return String(car.year) === yearFilter;
+    })
     .sort((a, b) => {
       if (sort === "model-asc") {
         return a.model.localeCompare(b.model);
@@ -69,28 +80,52 @@ export function CarList() {
             <MenuItem value="model-desc">Model Z-A</MenuItem>
           </Select>
         </FormControl>
+        <FormControl>
+          <InputLabel id="car-year-label">Year</InputLabel>
+          <Select
+            labelId="car-year-label"
+            label="Year"
+            value={yearFilter}
+            onChange={(event) => setYearFilter(event.target.value)}
+          >
+            <MenuItem value="all">All years</MenuItem>
+            {years.map((year) => (
+              <MenuItem key={year} value={String(year)}>
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
-      <Grid container spacing={3}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
+          },
+          gap: 3,
+        }}
+      >
         {filtered.map((car) => (
-          <Grid item key={car.id} xs={12} sm={6} md={4}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="200"
-                image={imageFor(car)}
-                alt={`${car.make} ${car.model}`}
-              />
-              <CardContent>
-                <Typography variant="h6">
-                  {car.make} {car.model}
-                </Typography>
-                <Typography variant="body2">{car.year}</Typography>
-                <Typography variant="body2">{car.color}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          <Card key={car.id}>
+            <CardMedia
+              component="img"
+              height="200"
+              image={imageFor(car)}
+              alt={`${car.make} ${car.model}`}
+            />
+            <CardContent>
+              <Typography variant="h6">
+                {car.make} {car.model}
+              </Typography>
+              <Typography variant="body2">{car.year}</Typography>
+              <Typography variant="body2">{car.color}</Typography>
+            </CardContent>
+          </Card>
         ))}
-      </Grid>
+      </Box>
     </Box>
   );
 }
