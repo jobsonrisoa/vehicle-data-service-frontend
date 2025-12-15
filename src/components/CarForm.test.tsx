@@ -44,7 +44,8 @@ describe("CarForm", () => {
     await userEvent.type(screen.getByLabelText(/make/i), "Test");
     const modelInputs = screen.getAllByLabelText(/model/i);
     await userEvent.type(modelInputs[0], "Car");
-    await userEvent.type(screen.getByLabelText(/year/i), "2025");
+    const yearInputs = screen.getAllByLabelText(/year/i);
+    await userEvent.type(yearInputs[0], "2025");
     await userEvent.type(screen.getByLabelText(/color/i), "Black");
 
     await userEvent.click(screen.getByRole("button", { name: /add car/i }));
